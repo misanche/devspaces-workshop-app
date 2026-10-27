@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DevSpaces Workshop App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f6f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .card {
+      background: white;
+      padding: 2rem 3rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      text-align: center;
+      max-width: 500px;
+    }
+    h1 { color: #e00; }
+    button {
+      background: #0066cc;
+      color: white;
+      border: none;
+      padding: 10px 200px;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-top: 1rem;
+    }
+    button:hover { background: #004c99; }
+    pre { text-align: left; background: #eeeff1; padding: 1rem; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Welcome to OpenShift DevSpaces Champions App!</h1>
+    <p>This application is running inside a container on Red Hat OpenShift.</p>
+    <button onclick="fetchData()">Test API Endpoint (/api/data)</button>
+    <pre id="output">Click the button to fetch API response...</pre>
+  </div>
+
+  <script>
+    async function fetchData() {
+      try {
+        const response = await fetch('/api/data');
+        const data = await response.json();
+        document.getElementById('output').textContent = JSON.stringify(data, null, 2);
+      } catch (err) {
+        document.getElementById('output').textContent = 'Error fetching API: ' + err;
+      }
+    }
+  </script>
+</body>
+</html>
