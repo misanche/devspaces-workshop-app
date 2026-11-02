@@ -3,3 +3,48 @@ metadata:
   name: nodejs-workshop-app
   displayName: DevSpaces Champions Workshop Node.js App
   description: Sample Node.js Express application for OpenShift DevSpaces hands-on workshop
+components:
+  - name: outer-loop-build
+    container:
+      image: registry.access.redhat.com/ubi9/nodejs-18:latest
+      # memoryLimit: 1024Mi
+      mountSources: true
+      command: ['tail']
+      args: ['-f', '/dev/null']
+      endpoints:
+        - name: http-8080
+          targetPort: 8080
+          exposure: public
+          protocol: http
+          secure: true
+        - name: debug-9229
+          targetPort: 9229
+          exposure: internal
+commands:
+  - id: run-app
+    exec:
+      component: outer-loop-build
+      commandLine: "npm run start"
+      workingDir: ${PROJECT_SOURCE}
+      group:
+        kind: run
+        isDefault: true
+  - id: run-tests
+    exec:
+      component: outer-loop-build
+      commandLine: "npm test"
+      workingDir: ${PROJECT_SOURCE}
+      group:
+        kind: test
+        isDefault: true
+  - id: run-install
+    exec:
+      component: outer-loop-build
+      commandLine: "npm install"
+      workingDir: ${PROJECT_SOURCE}
+      group:
+        kind: build
+        isDefault: true
+events:
+  postStart:
+    - run-install
