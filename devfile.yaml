@@ -6,7 +6,7 @@ metadata:
 components:
   - name: outer-loop-build
     container:
-      image: registry.access.redhat.com/ubi9/nodejs-18:latest
+      image: registry.access.redhat.com/ubi9/nodejs-24:latest
       # memoryLimit: 1024Mi
       mountSources: true
       command: ['tail']
@@ -20,6 +20,33 @@ components:
         - name: debug-9229
           targetPort: 9229
           exposure: internal
+      env:
+        - name: DB_HOST
+          value: "localhost"
+        - name: DB_PORT
+          value: "5432"
+        - name: DB_USER
+          value: "workshop_user"
+        - name: DB_PASSWORD
+          value: "workshop_pass"
+        - name: DB_NAME
+          value: "workshop_db"
+  - name: postgres-db
+    container:
+      image: quay.io/sclorg/postgresql-13-c9s:latest
+      memoryLimit: 512Mi
+      env:
+        - name: POSTGRESQL_USER
+          value: "workshop_user"
+        - name: POSTGRESQL_PASSWORD
+          value: "workshop_pass"
+        - name: POSTGRESQL_DATABASE
+          value: "workshop_db"
+      endpoints:
+        - name: postgres
+          targetPort: 5432
+          exposure: internal
+
 commands:
   - id: run-app
     exec:
